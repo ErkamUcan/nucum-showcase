@@ -26,6 +26,7 @@ with an **offline-first phone app** (React Native) that syncs over a private tai
 [Quality](#-quality) ·
 [Timeline](#-how-it-was-built) ·
 [Trade-offs](#-honest-trade-offs) ·
+[Interactive diagrams ↗](https://erkamucan.github.io/nucum-showcase/) ·
 [Source](#-source-code)
 
 <img src="images/bugun.png" alt="Nücum — the Today screen" width="900" />
@@ -103,7 +104,7 @@ Nücum replaces three separate study/habit trackers with **one app and one "Toda
 
 ## ✨ Engineering highlights
 
-Each section opens with the idea in one sentence. Click to see the diagram and the code.
+Each section opens with the idea in one sentence and its diagram. Click a section's details for the code.
 
 ### 1. A modular monolith whose boundaries are tested, not hoped for
 
@@ -126,13 +127,15 @@ Each section opens with the idea in one sentence. Click to see the diagram and t
 
 > Endpoint → dispatcher → `Logging → Validation → Handler` → `Result<T>` → one place that maps errors to HTTP (RFC 9457 ProblemDetails). No MediatR, no exceptions for expected failures.
 
-<details>
-<summary><b>The request pipeline</b> — "start a focus session", end to end</summary>
-<br/>
+**The request pipeline** — "start a focus session", end to end
+
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="images/diagrams/request-pipeline-dark.png" />
   <img src="images/diagrams/request-pipeline-light.png" alt="Sequence diagram of a request through middleware, endpoint, dispatcher, pipeline, handler and database" />
 </picture>
+
+<details>
+<summary><b>Details</b></summary>
 
 The dispatcher builds the closed handler type once by reflection, caches it, and wraps the registered behaviours around it ([Dispatcher.cs](code-samples/backend/src/Nucum.SharedKernel/Messaging/Dispatcher.cs), abridged):
 
@@ -158,14 +161,16 @@ return await next().ConfigureAwait(false);
 
 > Every user action is appended to a log that is never updated. XP, streaks and statistics are **projections** that can be thrown away and rebuilt — and they **catch up on read**, so nothing has to run at 04:00 while the laptop sleeps.
 
-<details>
-<summary><b>What happens when a focus session ends</b></summary>
-<br/>
+**What happens when a focus session ends**
+
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="images/diagrams/event-flow-dark.gif" />
   <img src="images/diagrams/event-flow-light.gif" alt="Animated data flow: FinishAsync writes the session, the change log and the activity log, publishes a domain event to handlers, and XP catches up on read" />
 </picture>
 <sub>Animated: each pulse follows one write or event in step order. The interactive version can pause, zoom and trace a path.</sub>
+
+<details>
+<summary><b>Details</b></summary>
 
 - **Deterministic + idempotent projection:** the same events always produce the same XP lines with the same ids; a test rebuilds the ledger and compares ([XpProjector.cs](code-samples/backend/src/Modules/Gamification/Nucum.Modules.Gamification/Application/XpProjector.cs)).
 - **Cache keyed by the change log:** the gamification summary is cached under *(latest `sync_changes` number, logical day)* — a version every write already maintains, instead of a guessed TTL. Two years of data: from ~300 ms per read to a cache hit.
@@ -173,13 +178,15 @@ return await next().ConfigureAwait(false);
 
 </details>
 
-<details>
-<summary><b>The lifecycle of a "logical day"</b> — the day ends at 04:00, not midnight</summary>
-<br/>
+**The lifecycle of a "logical day"** — the day ends at 04:00, not midnight
+
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="images/diagrams/day-lifecycle-dark.png" />
   <img src="images/diagrams/day-lifecycle-light.png" alt="State diagram of a day: future, arrived, built, started, closed, over, judged" />
 </picture>
+
+<details>
+<summary><b>Details</b></summary>
 
 Work logged at 01:30 counts for "last night". One service decides what "today" is; timestamps are stored in UTC and the logical date next to them. Plans made ahead, streak verdicts and XP are applied **on the first read** of a day, idempotently — two devices reading at once is harmless.
 
@@ -189,14 +196,16 @@ Work logged at 01:30 counts for "last night". One service decides what "today" i
 
 > The phone works fully offline from its own SQLite replica. Sync is **push the outbox, then pull after a cursor**; conflicts are decided **per field** by a **Hybrid Logical Clock**, and a retried push can never apply twice.
 
-<details>
-<summary><b>The protocol</b> — pairing, push, pull, live hint</summary>
-<br/>
+**The protocol** — pairing, push, pull, live hint
+
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="images/diagrams/phone-sync-dark.gif" />
   <img src="images/diagrams/phone-sync-light.gif" alt="Animated sequence diagram of phone sync: pairing, offline write, push with idempotency, pull with a cursor, SignalR hint" />
 </picture>
 <sub>Animated: the messages play in protocol order. The interactive version can pause, zoom and trace a path.</sub>
+
+<details>
+<summary><b>Details</b></summary>
 
 **Retry safety, three layers deep** ([SyncApplier.cs](code-samples/backend/src/Modules/Sync/Nucum.Modules.Sync/Application/SyncApplier.cs)):
 
@@ -222,15 +231,13 @@ Also: device id in the HLC must match the sender, clocks far in the future are r
 
 </details>
 
-<details>
-<summary><b>The schema behind it</b></summary>
-<br/>
+**The schema behind it**
+
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="images/diagrams/sync-schema-dark.png" />
   <img src="images/diagrams/sync-schema-light.png" alt="ERD of the sync module tables" />
 </picture>
-
-</details>
+<sub>Devices, pairing codes, batches, inbox, conflicts, id aliases, media uploads and the change log.</sub>
 
 ### 5. One write path, stamped by an interceptor
 
