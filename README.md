@@ -162,9 +162,10 @@ return await next().ConfigureAwait(false);
 <summary><b>What happens when a focus session ends</b></summary>
 <br/>
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="images/diagrams/event-flow-dark.png" />
-  <img src="images/diagrams/event-flow-light.png" alt="Data flow: FinishAsync writes the session, the change log and the activity log, publishes a domain event to handlers, and XP catches up on read" />
+  <source media="(prefers-color-scheme: dark)" srcset="images/diagrams/event-flow-dark.gif" />
+  <img src="images/diagrams/event-flow-light.gif" alt="Animated data flow: FinishAsync writes the session, the change log and the activity log, publishes a domain event to handlers, and XP catches up on read" />
 </picture>
+<sub>Animated: each pulse follows one write or event in step order. The interactive version can pause, zoom and trace a path.</sub>
 
 - **Deterministic + idempotent projection:** the same events always produce the same XP lines with the same ids; a test rebuilds the ledger and compares ([XpProjector.cs](code-samples/backend/src/Modules/Gamification/Nucum.Modules.Gamification/Application/XpProjector.cs)).
 - **Cache keyed by the change log:** the gamification summary is cached under *(latest `sync_changes` number, logical day)* — a version every write already maintains, instead of a guessed TTL. Two years of data: from ~300 ms per read to a cache hit.
@@ -192,9 +193,10 @@ Work logged at 01:30 counts for "last night". One service decides what "today" i
 <summary><b>The protocol</b> — pairing, push, pull, live hint</summary>
 <br/>
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="images/diagrams/phone-sync-dark.png" />
-  <img src="images/diagrams/phone-sync-light.png" alt="Sequence diagram of phone sync: pairing, offline write, push with idempotency, pull with a cursor, SignalR hint" />
+  <source media="(prefers-color-scheme: dark)" srcset="images/diagrams/phone-sync-dark.gif" />
+  <img src="images/diagrams/phone-sync-light.gif" alt="Animated sequence diagram of phone sync: pairing, offline write, push with idempotency, pull with a cursor, SignalR hint" />
 </picture>
+<sub>Animated: the messages play in protocol order. The interactive version can pause, zoom and trace a path.</sub>
 
 **Retry safety, three layers deep** ([SyncApplier.cs](code-samples/backend/src/Modules/Sync/Nucum.Modules.Sync/Application/SyncApplier.cs)):
 

@@ -72,7 +72,7 @@
   <header>
     <div class="eyebrow">Nücum · architecture</div>
     <h1>Code-backed architecture diagrams</h1>
-    <p class="lead">Each diagram was authored from the source code, and every box carries the file and line it came from. Open one to zoom, search, trace a path or switch between light and dark.</p>
+    <p class="lead">Each diagram was authored from the source code, and every box carries the file and line it came from. Open one to zoom, search, trace a path or switch between light and dark. Diagrams opened from here play their flow; press <b>Still</b> in the diagram to pause it.</p>
     <div class="meta">
       <span class="chip">ASP.NET Core 10 modular monolith</span>
       <span class="chip">EF Core + SQLite</span>
@@ -118,5 +118,14 @@
     <a href="https://github.com/ErkamUcan/nucum-showcase">← Back to the repository</a> · Diagrams rendered with <a href="https://github.com/tt-a1i/archify">Archify</a>.
   </footer>
 </main>
+<script>
+  // The diagram viewer starts in Still unless the visitor chose Live before. Opening a card is
+  // that choice, so I save it here (same origin); without JS the links still open the diagrams.
+  document.querySelectorAll('a.card').forEach(function (card) {
+    card.addEventListener('click', function () {
+      try { localStorage.setItem('archify-motion', 'live'); } catch (_) {}
+    });
+  });
+</script>
 </body>
 </html>
