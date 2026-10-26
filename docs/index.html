@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Nücum — Architecture Diagrams</title>
+<meta name="description" content="Interactive, code-backed architecture diagrams of Nücum: a local-first planner built as an ASP.NET Core modular monolith with an offline-first phone app." />
+<style>
+  :root {
+    --bg: #f6f7f9;
+    --surface: #ffffff;
+    --text: #1b1f24;
+    --muted: #5b6470;
+    --border: #e1e5ea;
+    --accent: #2f6fde;
+    --accent-soft: #e8f0fd;
+    --radius: 14px;
+    --gap: 20px;
+    --shadow: 0 1px 2px rgba(16, 24, 40, .06), 0 8px 24px rgba(16, 24, 40, .06);
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0d1117;
+      --surface: #161b22;
+      --text: #e6edf3;
+      --muted: #9aa5b1;
+      --border: #2a313c;
+      --accent: #6aa3ff;
+      --accent-soft: #15233b;
+      --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px rgba(0, 0, 0, .35);
+      color-scheme: dark;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 16px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  main { max-width: 1180px; margin: 0 auto; padding: 48px 16px 64px; }
+  header { margin-bottom: 36px; }
+  .eyebrow { color: var(--accent); font-weight: 600; letter-spacing: .04em; text-transform: uppercase; font-size: 13px; }
+  h1 { font-size: clamp(28px, 4vw, 40px); line-height: 1.15; margin: 8px 0 12px; }
+  .lead { color: var(--muted); max-width: 760px; margin: 0; }
+  .meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+  .chip { background: var(--accent-soft); color: var(--accent); border-radius: 999px; padding: 4px 12px; font-size: 13px; font-weight: 600; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: var(--gap); }
+  .card {
+    display: flex; flex-direction: column;
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    box-shadow: var(--shadow); overflow: hidden; text-decoration: none; color: inherit;
+    transition: transform .15s ease, border-color .15s ease;
+  }
+  .card:hover, .card:focus-visible { transform: translateY(-2px); border-color: var(--accent); outline: none; }
+  .thumb { aspect-ratio: 16 / 10; background: var(--bg); border-bottom: 1px solid var(--border); overflow: hidden; }
+  .thumb img { width: 100%; height: 100%; object-fit: cover; object-position: top center; display: block; }
+  .body { padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+  .kind { font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
+  .card h2 { font-size: 18px; margin: 0; }
+  .card p { margin: 0; color: var(--muted); font-size: 14.5px; }
+  .open { margin-top: auto; padding-top: 8px; color: var(--accent); font-weight: 600; font-size: 14px; }
+  .note { margin-top: 36px; padding: 16px 18px; border: 1px dashed var(--border); border-radius: var(--radius); color: var(--muted); font-size: 14.5px; }
+  footer { margin-top: 40px; color: var(--muted); font-size: 14px; }
+  a { color: var(--accent); }
+  @media (prefers-reduced-motion: reduce) { .card { transition: none; } .card:hover { transform: none; } }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <div class="eyebrow">Nücum · architecture</div>
+    <h1>Code-backed architecture diagrams</h1>
+    <p class="lead">Each diagram was authored from the source code, and every box carries the file and line it came from. Open one to zoom, search, trace a path or switch between light and dark.</p>
+    <div class="meta">
+      <span class="chip">ASP.NET Core 10 modular monolith</span>
+      <span class="chip">EF Core + SQLite</span>
+      <span class="chip">React 19 · Tauri 2</span>
+      <span class="chip">Offline-first React Native</span>
+    </div>
+  </header>
+
+  <section class="grid" aria-label="Diagrams">
+    <a class="card" href="diagrams/architecture-overview.html">
+      <div class="thumb"><picture><source media="(prefers-color-scheme: dark)" srcset="diagrams/thumbs/architecture-overview-dark.png" /><img src="diagrams/thumbs/architecture-overview-light.png" alt="" loading="lazy" /></picture></div>
+      <div class="body"><span class="kind">Architecture</span><h2>System overview</h2><p>Shell, UI, auth gate, API host, module groups, database, phone and extension — and which token each client carries.</p><span class="open">Open interactive →</span></div>
+    </a>
+    <a class="card" href="diagrams/request-pipeline.html">
+      <div class="thumb"><picture><source media="(prefers-color-scheme: dark)" srcset="diagrams/thumbs/request-pipeline-dark.png" /><img src="diagrams/thumbs/request-pipeline-light.png" alt="" loading="lazy" /></picture></div>
+      <div class="body"><span class="kind">Sequence</span><h2>Request pipeline</h2><p>Middleware → endpoint → own CQRS dispatcher → logging/validation → handler → Result&lt;T&gt; → ProblemDetails, including the error paths.</p><span class="open">Open interactive →</span></div>
+    </a>
+    <a class="card" href="diagrams/event-flow.html">
+      <div class="thumb"><picture><source media="(prefers-color-scheme: dark)" srcset="diagrams/thumbs/event-flow-dark.png" /><img src="diagrams/thumbs/event-flow-light.png" alt="" loading="lazy" /></picture></div>
+      <div class="body"><span class="kind">Data flow</span><h2>Event flow</h2><p>What one finished focus session writes, publishes and triggers: change log, append-only event log, handlers, XP projection, live hint.</p><span class="open">Open interactive →</span></div>
+    </a>
+    <a class="card" href="diagrams/phone-sync.html">
+      <div class="thumb"><picture><source media="(prefers-color-scheme: dark)" srcset="diagrams/thumbs/phone-sync-dark.png" /><img src="diagrams/thumbs/phone-sync-light.png" alt="" loading="lazy" /></picture></div>
+      <div class="body"><span class="kind">Sequence</span><h2>Phone sync</h2><p>QR pairing, retry-safe push in three layers, cursor-based pull, per-field last-writer-wins on a hybrid logical clock.</p><span class="open">Open interactive →</span></div>
+    </a>
+    <a class="card" href="diagrams/sync-schema.html">
+      <div class="thumb"><picture><source media="(prefers-color-scheme: dark)" srcset="diagrams/thumbs/sync-schema-dark.png" /><img src="diagrams/thumbs/sync-schema-light.png" alt="" loading="lazy" /></picture></div>
+      <div class="body"><span class="kind">ERD</span><h2>Sync schema</h2><p>Devices, pairing codes, batches, inbox, conflicts, id aliases, media uploads and the change log — every column and type.</p><span class="open">Open interactive →</span></div>
+    </a>
+    <a class="card" href="diagrams/day-lifecycle.html">
+      <div class="thumb"><picture><source media="(prefers-color-scheme: dark)" srcset="diagrams/thumbs/day-lifecycle-dark.png" /><img src="diagrams/thumbs/day-lifecycle-light.png" alt="" loading="lazy" /></picture></div>
+      <div class="body"><span class="kind">Lifecycle</span><h2>Lifecycle of a day</h2><p>A logical day that ends at 04:00 — and why nothing has to run at 04:00: everything catches up on read, idempotently.</p><span class="open">Open interactive →</span></div>
+    </a>
+    <a class="card" href="diagrams/development-timeline.html">
+      <div class="thumb"><picture><source media="(prefers-color-scheme: dark)" srcset="diagrams/thumbs/development-timeline-dark.png" /><img src="diagrams/thumbs/development-timeline-light.png" alt="" loading="lazy" /></picture></div>
+      <div class="body"><span class="kind">Timeline</span><h2>Development timeline</h2><p>19 desktop phases, 5 phone stages and maintenance releases, taken from git tags and report commits.</p><span class="open">Open interactive →</span></div>
+    </a>
+  </section>
+
+  <p class="note">The application source is private. Source references inside the diagrams name the file and line in that private repository; a selection of those files is published in <a href="https://github.com/ErkamUcan/nucum-showcase/tree/main/code-samples">code-samples/</a>.</p>
+
+  <footer>
+    <a href="https://github.com/ErkamUcan/nucum-showcase">← Back to the repository</a> · Diagrams rendered with <a href="https://github.com/tt-a1i/archify">Archify</a>.
+  </footer>
+</main>
+</body>
+</html>
