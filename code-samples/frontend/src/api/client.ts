@@ -1,3 +1,4 @@
+import { currentLanguage } from '../i18n/i18n';
 // File summary: Minimal fetch wrapper that attaches the Nücum session token
 // to every request. In Tauri, the token is read from a Tauri command on
 // startup. In dev (plain browser), it falls back to the launchSettings
@@ -64,6 +65,9 @@ export async function apiFetch(path: string, init: RequestInit = {}): Promise<Re
   const headers = new Headers(init.headers);
   headers.set('Authorization', `Bearer ${token}`);
   if (!headers.has('Accept')) headers.set('Accept', 'application/json');
+  // Phase 19 (DECISIONS F169): the server picks the English or Turkish twin
+  // of its shipped content (gallery, module type notes, Journal export).
+  if (!headers.has('Accept-Language')) headers.set('Accept-Language', currentLanguage());
   return (s.fetch ?? fetch)(`${base}${path}`, { ...init, headers });
 }
 

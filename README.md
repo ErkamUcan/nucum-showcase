@@ -31,7 +31,7 @@ with an **offline-first phone app** (React Native) that syncs over a private tai
 
 <img src="images/bugun.png" alt="Nücum — the Today screen" width="900" />
 
-<sub>Screenshots show the generated <b>demo pack</b> (<code>npm run demo-pack</code>), not personal data. The UI is in Turkish.</sub>
+<sub>Screenshots show the generated English <b>demo pack</b> (<code>npm run demo-pack -- --lang en</code>), not personal data. The UI is in English and Turkish (Settings → Appearance → Language; first run follows the Windows language).</sub>
 
 </div>
 
